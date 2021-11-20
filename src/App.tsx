@@ -1,12 +1,15 @@
 import React from "react";
 
 import "./App.css";
+import { CountdownProvider } from "./context/CountdownContext";
 import Home from "./pages/Home";
 
 function App() {
   return (
     <div className='App'>
-      <Home />
+      <CountdownProvider>
+        <Home />
+      </CountdownProvider>
     </div>
   );
 }
