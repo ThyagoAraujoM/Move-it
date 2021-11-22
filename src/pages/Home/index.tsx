@@ -1,20 +1,22 @@
 import { Container } from "@material-ui/core";
 import React from "react";
-import { MainContainer, XpBar } from "./styles";
+import { MainContainer } from "./styles";
 
 import { CompletedChallenges } from "../../components/CompletedChallenges";
 import { Countdown } from "../../components/Countdown";
 import { User } from "../../components/User";
 import { Challenges } from "../../components/Challenges";
-
+import XpBar from "../../components/XpBar";
+import ModalLevelUp from "../../components/ModalLevelUp";
+import { Helmet } from "react-helmet";
+import flaviconIcon from "../../assets/favicon.png";
 export default function Index() {
   return (
     <Container sx={{ height: "100vh" }}>
-      <XpBar>
-        <p>0 px</p>
-        <div></div>
-        <p>600 px</p>
-      </XpBar>
+      <Helmet>
+        <link rel='icon' href={flaviconIcon} />
+      </Helmet>
+      <XpBar />
       <MainContainer>
         <div className={"c-grid1"}>
           <User />
@@ -25,6 +27,7 @@ export default function Index() {
           <Challenges />
         </div>
       </MainContainer>
+      <ModalLevelUp />
     </Container>
   );
 }

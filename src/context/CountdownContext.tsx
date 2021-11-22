@@ -1,14 +1,14 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useChallenges } from "../hooks/useChallenges";
 
-type CountdownContextData = {
+interface CountdownContextData {
   isActive: boolean;
   startCountdown: () => void;
   minutes: number;
   seconds: number;
   hasFinished: boolean;
   resetCountdown: () => void;
-};
+}
 
 type CountdownProviderProps = {
   children: ReactNode;
@@ -19,18 +19,10 @@ let countdownTimeout: NodeJS.Timeout;
 export const CountdownContext = createContext({} as CountdownContextData);
 
 export function CountdownProvider({ children }: CountdownProviderProps) {
-  const { startNewChallenge } = useChallenges();
+  const { newChallenge, level } = useChallenges();
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState(0.1 * 60);
   const [hasFinished, setHasFinished] = useState(false);
-
-  useEffect(() => {
-    window.onbeforeunload = () => {
-      if (isActive) {
-        return "Você perderá o progresso do countdown até aqui, tem certeza?";
-      }
-    };
-  }, [isActive]);
 
   useEffect(() => {
     if (isActive && time > 0) {
@@ -38,7 +30,12 @@ export function CountdownProvider({ children }: CountdownProviderProps) {
         setTime(time - 1);
       }, 1000);
     } else if (isActive && time === 0) {
-      startNewChallenge();
+      try {
+        newChallenge();
+      } catch (error) {
+        console.log(error);
+      }
+      newChallenge();
       setHasFinished(true);
       setIsActive(false);
     }

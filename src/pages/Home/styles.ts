@@ -1,23 +1,6 @@
 import { Button } from "@material-ui/core";
 import { styled } from "@material-ui/system";
 
-export const XpBar = styled("div")`
-  display: grid;
-  grid-template-columns: 60px 840px 60px;
-  justify-content: center;
-  align-items: center;
-  font-family: "Inter", sans-serif;
-  gap: 10px;
-  color: #666666;
-  padding-top: 20px;
-
-  div {
-    background: #dcdde0;
-    height: 4px;
-    transform: translate(0, 50%);
-  }
-`;
-
 export const MainContainer = styled("div")`
   * {
     margin: 0;

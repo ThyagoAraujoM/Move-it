@@ -2,54 +2,59 @@ import levelup from "../assets/icons/level-up.svg";
 import body from "../assets/icons/body.svg";
 import eye from "../assets/icons/eye.svg";
 import { ChallengesStyle } from "../styles/components/ChallengesStyle";
+import { useChallenges } from "../hooks/useChallenges";
 import { useCountdown } from "../hooks/useCountdown";
 
 export function Challenges() {
-  const { hasFinished } = useCountdown();
+  const { activeChallenge, challengeComplete, resetChallenge } =
+    useChallenges();
+  const { resetCountdown } = useCountdown();
+
+  function handleChallengeSucceeded() {
+    challengeComplete();
+    resetCountdown();
+  }
+
+  function handleChallengeFailed() {
+    resetChallenge();
+    resetCountdown();
+  }
 
   return (
     <ChallengesStyle>
-      {!hasFinished ? (
+      {!activeChallenge ? (
         <div className={"c-new-cycle"}>
           <h1>Inicie um ciclo para receber desafios</h1>
           <img src={levelup} alt='' />
           <p>Avance de level completando os desafios.</p>
         </div>
-      ) : null}
-
-      {false ? (
+      ) : (
         <div className={"c-challenges"}>
-          <h3 className={"c-xp"}>Ganhe 400 xp</h3>
+          <h3 className={"c-xp"}>Ganhe {activeChallenge.amount} xp</h3>
           <hr />
-          <img src={body} alt='' />
-          <h2 className={"c-title"}>Exercite-se</h2>
-          <p>
-            É agora Diegão, bora lá meu parça. <br /> Caminhe por 3 minutos e
-            estique suas pernas pra você ficar saudável.
-          </p>
+          <img src={activeChallenge.type === "body" ? body : eye} alt='' />
+          <h2 className={"c-title"}>
+            {activeChallenge.type === "body" ? "Exercite-se" : "Mova os olhos"}
+          </h2>
+          <p>{activeChallenge.description}</p>
           <div className={"c-buttons-container"}>
-            <button className={"c-red-button"}>Falhei</button>
-            <button className={"c-green-button"}>Completei</button>
+            <button
+              className={"c-red-button"}
+              onClick={() => {
+                handleChallengeFailed();
+              }}>
+              Falhei
+            </button>
+            <button
+              className={"c-green-button"}
+              onClick={() => {
+                handleChallengeSucceeded();
+              }}>
+              Completei
+            </button>
           </div>
         </div>
-      ) : null}
-
-      {false ? (
-        <div className={"c-challenges"}>
-          <h3 className={"c-xp"}>Ganhe 400 xp</h3>
-          <hr />
-          <img src={eye} alt='' />
-          <h2 className={"c-title"}>Mova os olhos</h2>
-          <p>
-            É agora Diegão, bora lá meu parça. <br /> Caminhe por 3 minutos e
-            estique suas pernas pra você ficar saudável.
-          </p>
-          <div className={"c-buttons-container"}>
-            <button className={"c-red-button"}>Falhei</button>
-            <button className={"c-green-button"}>Completei</button>
-          </div>
-        </div>
-      ) : null}
+      )}
     </ChallengesStyle>
   );
 }

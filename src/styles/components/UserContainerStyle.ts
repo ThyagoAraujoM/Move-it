@@ -1,3 +1,4 @@
+import { Button } from "@material-ui/core";
 import { styled } from "@material-ui/system";
 
 export const UserContainer = styled("div")`
@@ -35,5 +36,35 @@ export const UserContainer = styled("div")`
       align-items: center;
       color: #666666;
     }
+  }
+`;
+
+export const SignInContainer = styled("div")`
+  display: flex;
+  height: 88px;
+  width: 100%;
+  gap: 20px;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  .c-user-level {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    color: #666666;
+  }
+`;
+
+export const SignInButton = styled(Button)`
+  background: #ea4335;
+  color: #fff;
+  font-size: 12px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  &:hover {
+    background: #ea4335;
+    filter: brightness(0.9);
   }
 `;

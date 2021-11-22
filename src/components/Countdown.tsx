@@ -56,7 +56,7 @@ export function Countdown() {
       {hasFinished && !isActive ? (
         <CycleEnded>
           <span>Ciclo encerrado</span>
-          <img src={check} alt='Check image' />
+          <img src={check} alt='Check' />
         </CycleEnded>
       ) : null}
     </>
