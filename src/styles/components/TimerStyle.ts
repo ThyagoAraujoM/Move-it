@@ -18,11 +18,11 @@ export const TimerStyle = styled("div")`
       box-shadow: 0px 0px 60px 0px rgba(0, 0, 0, 0.05);
       color: rgba(46, 56, 77, 1);
     }
-    p:first-child {
+    p:first-of-type {
       border-top-right-radius: 0px;
       border-bottom-right-radius: 0px;
     }
-    p:last-child {
+    p:last-of-type {
       border-top-left-radius: 0px;
       border-bottom-left-radius: 0px;
     }

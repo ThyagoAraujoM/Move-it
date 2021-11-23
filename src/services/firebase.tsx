@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-import { getDatabase, ref, set, child, get } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDJzY-_oe8gmcU2Czu-5H5q5UGTv1ZAfp0",
@@ -17,7 +17,13 @@ const auth = getAuth();
 const googleAuthProvider = new GoogleAuthProvider();
 const database = getDatabase(app);
 
-function writeUserData(userId, name, imageUrl, level, xp) {
+function writeUserData(
+  userId: string,
+  name: string,
+  imageUrl: string,
+  level: number,
+  xp: number
+) {
   const db = getDatabase();
   set(ref(db, "users/" + userId), {
     username: name,
@@ -26,26 +32,5 @@ function writeUserData(userId, name, imageUrl, level, xp) {
     currentXp: xp,
   });
 }
-function readUserData(userId) {
-  const dbRef = ref(getDatabase());
-  get(child(dbRef, `users/${userId}`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
 
-export {
-  auth,
-  googleAuthProvider,
-  database,
-  signInWithPopup,
-  writeUserData,
-  readUserData,
-};
+export { auth, googleAuthProvider, database, signInWithPopup, writeUserData };

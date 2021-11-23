@@ -9,8 +9,15 @@ import {
 import googleIcon from "../assets/icons/google.svg";
 
 export function User() {
-  const { level } = useChallenges();
+  const { level, currentExperience, resetCurrentLevelAndXp } = useChallenges();
   const { user, signInWithGoogle } = useAuth();
+
+  function handleLogin() {
+    let actualLevel = level - 1;
+    signInWithGoogle(actualLevel, currentExperience);
+    resetCurrentLevelAndXp();
+  }
+
   return (
     <>
       {user ? (
@@ -27,7 +34,7 @@ export function User() {
         <SignInContainer>
           <SignInButton
             onClick={() => {
-              signInWithGoogle();
+              handleLogin();
             }}>
             <img src={googleIcon} alt='' /> Entre com sua conta do google
           </SignInButton>

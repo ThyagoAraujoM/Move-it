@@ -19,9 +19,9 @@ let countdownTimeout: NodeJS.Timeout;
 export const CountdownContext = createContext({} as CountdownContextData);
 
 export function CountdownProvider({ children }: CountdownProviderProps) {
-  const { newChallenge, level } = useChallenges();
+  const { newChallenge } = useChallenges();
   const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState(0.1 * 60);
+  const [time, setTime] = useState(0.1 * 10);
   const [hasFinished, setHasFinished] = useState(false);
 
   useEffect(() => {
@@ -39,6 +39,7 @@ export function CountdownProvider({ children }: CountdownProviderProps) {
       setHasFinished(true);
       setIsActive(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, time]);
 
   function startCountdown() {
@@ -48,7 +49,7 @@ export function CountdownProvider({ children }: CountdownProviderProps) {
   function resetCountdown() {
     clearTimeout(countdownTimeout);
     setIsActive(false);
-    setTime(0.1 * 60);
+    setTime(0.1 * 10);
     setHasFinished(false);
   }
 

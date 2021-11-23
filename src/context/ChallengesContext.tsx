@@ -3,9 +3,11 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
+  useEffect,
   useState,
 } from "react";
 import challenges from "../challenge.json";
+import useAuth from "../hooks/useAuth";
 
 interface Challenge {
   type: "body" | "eye";
@@ -24,6 +26,7 @@ interface ChallengesContextType {
   resetChallenge: () => void;
   setModalLevelUp: Dispatch<SetStateAction<boolean>>;
   modalLevelUp: boolean;
+  resetCurrentLevelAndXp: () => void;
 }
 
 type ChallengesProviderProps = {
@@ -37,8 +40,35 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
   const [challengesCompleted, setChallengesCompleted] = useState(0);
   const [activeChallenge, setActiveChallenge] = useState<Challenge>();
   const [currentExperience, setCurrentExperience] = useState(0);
-  const [experienceForNextLevel, setExperienceForNextLevel] = useState(200);
+  const [experienceForNextLevel, setExperienceForNextLevel] = useState(
+    level * 150
+  );
   const [modalLevelUp, setModalLevelUp] = useState(false);
+  const { user, setUser, saveNewXp, saveNewLevel } = useAuth();
+
+  useEffect(() => {
+    if (user && (user.level !== level || user.xp !== currentExperience)) {
+      setLevel(user.level);
+      setCurrentExperience(user.xp);
+      setExperienceForNextLevel(user.level * 150);
+    }
+  }, [user, setUser]);
+
+  useEffect(() => {
+    if (user && user.level !== level) {
+      let newUserState = user;
+      newUserState.level = level;
+      saveNewLevel(newUserState);
+    }
+  }, [level, setLevel]);
+
+  useEffect(() => {
+    if (user && user.xp !== currentExperience) {
+      let newUserState = user;
+      newUserState.xp = currentExperience;
+      saveNewXp(newUserState);
+    }
+  }, [currentExperience, setCurrentExperience]);
 
   function newChallenge() {
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length);
@@ -46,14 +76,14 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
 
     setActiveChallenge(challenge as Challenge);
 
-    new Audio("/notification.mp3").play();
+    // new Audio("../assets/notification.mp3").play();
 
-    if (Notification.permission === "granted") {
-      new Notification("Novo desafio 🎉", {
-        body: `Valendo ${challenge.amount} de xp!`,
-        silent: false,
-      });
-    }
+    // if (Notification.permission === "granted") {
+    //   new Notification("Novo desafio 🎉", {
+    //     body: `Valendo ${challenge.amount} de xp!`,
+    //     silent: false,
+    //   });
+    // }
   }
 
   function challengeComplete() {
@@ -84,6 +114,11 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     setActiveChallenge(undefined);
   }
 
+  function resetCurrentLevelAndXp() {
+    setLevel(1);
+    setCurrentExperience(0);
+  }
+
   return (
     <ChallengesContext.Provider
       value={{
@@ -97,6 +132,7 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
         resetChallenge,
         setModalLevelUp,
         modalLevelUp,
+        resetCurrentLevelAndXp,
       }}>
       {children}
     </ChallengesContext.Provider>

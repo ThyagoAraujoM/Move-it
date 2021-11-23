@@ -7,10 +7,10 @@ export const ChallengesCount = styled("div")`
   padding: 0 0 10px 0;
   color: #666666;
 
-  p:first-child {
+  p:first-of-type {
     font-size: 18px;
   }
-  p:last-child {
+  p:last-of-type {
     font-size: 24px;
   }
 `;
