@@ -4,15 +4,15 @@ import { styled } from "@material-ui/system";
 export const UserContainer = styled("div")`
   display: grid;
   height: 88px;
-  width: 308px;
+  width: 100%;
   gap: 20px;
   grid-template:
     "user-avatar user-info"
-    "user-avatar user-info" / 90px 200px;
+    "user-avatar user-info" / 1fr 2fr;
 
   .c-user-avatar {
     grid-area: user-avatar;
-    width: 88px;
+    max-width: 88px;
     border-radius: 50%;
   }
 

@@ -10,7 +10,9 @@ export default function XpBar() {
 
   return (
     <XpBarContainer>
-      <p>0 px</p>
+      <p>
+        0 <span>xp</span>
+      </p>
       <XpBarProgress
         sx={{
           "&::after": {
@@ -21,10 +23,17 @@ export default function XpBar() {
           sx={{
             left: `${(currentExperience / experienceForNextLevel) * 100}%`,
           }}>
-          {currentExperience > 0 ? `${currentExperience} xp` : null}
+          {currentExperience > 0 ? (
+            <p>
+              {currentExperience} <span>xp</span>{" "}
+            </p>
+          ) : null}
         </CurrentExpStyle>
       </XpBarProgress>
-      <p>{experienceForNextLevel} px</p>
+      <p>
+        {experienceForNextLevel}
+        <span> xp</span>
+      </p>
     </XpBarContainer>
   );
 }

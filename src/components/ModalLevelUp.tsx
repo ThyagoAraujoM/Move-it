@@ -8,15 +8,7 @@ import {
 } from "../styles/components/ModalLevelUpStyle";
 
 export default function ModalLevelUp() {
-  const { level, modalLevelUp, setModalLevelUp } = useChallenges();
-
-  function calcTotalXp() {
-    let totalGainedXp = 0;
-    for (let i = 0; i < level; i++) {
-      totalGainedXp += i * 150;
-    }
-    return totalGainedXp;
-  }
+  const { level, modalLevelUp, setModalLevelUp, calcTotalXp } = useChallenges();
 
   return modalLevelUp ? (
     <ModalContainer>

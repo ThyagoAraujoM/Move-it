@@ -21,28 +21,35 @@ export function User() {
 
   function handleLogin() {
     let actualLevel = level - 1;
-    signInWithGoogle(actualLevel, currentExperience, challengesCompleted);
-    resetCurrentDatas();
+    try {
+      signInWithGoogle(actualLevel, currentExperience, challengesCompleted);
+    } catch (error) {
+      return;
+    }
   }
 
   return (
     <>
       {user ? (
         <UserContainer>
-          <img className={"c-user-avatar"} src={user.avatar} alt='' />
+          <img
+            className={"c-user-avatar"}
+            src={user.avatar}
+            alt='User Avatar'
+          />
           <div className={"c-user-info"}>
             <h3 className={"c-user-name"}>{user.name}</h3>
 
             <p className={"c-user-level"}>
               <div>
-                <img src={levelImg} alt='' /> Level {level}
+                <img src={levelImg} alt='LevelImg' /> Level {level}
               </div>
               <img
                 src={deleteIcon}
                 onClick={() => {
                   setModalResetData(true);
                 }}
-                alt=''
+                alt='Delete Icon'
                 className={"c-deleteIcon"}
               />
             </p>
@@ -57,7 +64,7 @@ export function User() {
             <img src={googleIcon} alt='' /> Entre com sua conta do google
           </SignInButton>
           <p className={"c-user-level"}>
-            <img src={levelImg} alt='' /> Level {level}
+            <img src={levelImg} alt='Level' /> Level {level}
           </p>
         </SignInContainer>
       )}

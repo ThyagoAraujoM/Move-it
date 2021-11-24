@@ -1,3 +1,4 @@
+import { off } from "process";
 import {
   createContext,
   Dispatch,
@@ -29,6 +30,7 @@ interface ChallengesContextType {
   resetCurrentDatas: () => void;
   modalResetData: boolean;
   setModalResetData: Dispatch<SetStateAction<boolean>>;
+  calcTotalXp: () => number;
 }
 
 type ChallengesProviderProps = {
@@ -47,7 +49,14 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     level * 150
   );
   const [modalLevelUp, setModalLevelUp] = useState(false);
-  const { user, setUser, saveNewData, loadLocalStorage } = useAuth();
+  const {
+    user,
+    setUser,
+    saveNewData,
+    loadLocalStorage,
+    resetStorageDatas,
+    setResetStorageDatas,
+  } = useAuth();
 
   useEffect(() => {
     if (!user) {
@@ -73,7 +82,7 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
   }, [user, setUser]);
 
   useEffect(() => {
-    if (user && user.level !== level) {
+    if (user && user.xp !== currentExperience) {
       let newUserState = user;
       newUserState.level = level;
       newUserState.xp = currentExperience;
@@ -101,20 +110,28 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     setCurrentExperience,
   ]);
 
+  useEffect(() => {
+    if (resetStorageDatas) {
+      resetCurrentDatas();
+      setResetStorageDatas(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetStorageDatas]);
+
   function newChallenge() {
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length);
     const challenge = challenges[randomChallengeIndex];
 
     setActiveChallenge(challenge as Challenge);
 
-    // new Audio("../assets/notification.mp3").play();
+    new Audio("../assets/notification.mp3").play();
 
-    // if (Notification.permission === "granted") {
-    //   new Notification("Novo desafio 🎉", {
-    //     body: `Valendo ${challenge.amount} de xp!`,
-    //     silent: false,
-    //   });
-    // }
+    if (Notification.permission === "granted") {
+      new Notification("Novo desafio 🎉", {
+        body: `Valendo ${challenge.amount} de xp!`,
+        silent: false,
+      });
+    }
   }
 
   function challengeComplete() {
@@ -162,6 +179,14 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     );
   }
 
+  function calcTotalXp() {
+    let totalGainedXp = 0;
+    for (let i = 0; i < level; i++) {
+      totalGainedXp += i * 150;
+    }
+    return totalGainedXp;
+  }
+
   return (
     <ChallengesContext.Provider
       value={{
@@ -178,6 +203,7 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
         resetCurrentDatas,
         modalResetData,
         setModalResetData,
+        calcTotalXp,
       }}>
       {children}
     </ChallengesContext.Provider>

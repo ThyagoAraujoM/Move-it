@@ -14,7 +14,7 @@ import ModalResetData from "../../components/ModalResetData";
 export default function Index() {
   return (
     <HelmetProvider>
-      <Container sx={{ minHeight: "100vh" }}>
+      <Container sx={{ minHeight: "100vh", height: "100%" }}>
         <Helmet>
           <link rel='icon' href={flaviconIcon} />
         </Helmet>

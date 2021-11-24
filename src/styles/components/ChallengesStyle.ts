@@ -1,17 +1,21 @@
 import { styled } from "@material-ui/system";
 
 export const ChallengesStyle = styled("div")`
+  max-width: 390px;
+
   .c-new-cycle {
     display: flex;
     flex-direction: column;
-    gap: 50px;
     justify-content: center;
     align-items: center;
-
+    gap: 50px;
+    .c-grid1 {
+      margin: 0 auto;
+    }
     h1 {
       font-size: 24px;
       color: rgba(102, 102, 102, 1);
-      width: 251px;
+      max-width: 251px;
     }
 
     img {
@@ -22,19 +26,18 @@ export const ChallengesStyle = styled("div")`
     p {
       font-size: 16px;
       color: rgba(102, 102, 102, 1);
-      width: 220px;
+      max-width: 220px;
     }
   }
 
   .c-challenges {
-    padding: 25px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 25px;
-    width: 468px;
-    height: 500px;
+    padding: 25px;
+
     h3 {
       font-size: 20px;
       font-weight: 600;
@@ -42,13 +45,13 @@ export const ChallengesStyle = styled("div")`
     }
 
     hr {
-      width: 340px;
+      max-width: 340px;
       height: 0;
       border: 1px solid #dcdde0;
     }
     img {
-      width: 140px;
-      height: 112px;
+      max-width: 140px;
+      max-height: 112px;
     }
     h2 {
       font-size: 30px;
@@ -58,13 +61,13 @@ export const ChallengesStyle = styled("div")`
     }
     p {
       font-size: 16px;
-      width: 346px;
-      font-weight: 400;
+      max-width: 346px;
       color: rgba(102, 102, 102, 1);
       text-align: center;
     }
     .c-buttons-container {
       display: flex;
+      justify-content: center;
       gap: 8px;
       button {
         width: 174px;
@@ -84,6 +87,12 @@ export const ChallengesStyle = styled("div")`
       }
       .c-green-button {
         background: rgba(76, 214, 43, 1);
+      }
+
+      @media (max-width: 600px) {
+        button {
+          width: 100px;
+        }
       }
     }
   }

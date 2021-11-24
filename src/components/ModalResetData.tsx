@@ -15,15 +15,8 @@ export default function ModalResetData() {
     setModalResetData,
     challengesCompleted,
     resetCurrentDatas,
+    calcTotalXp,
   } = useChallenges();
-
-  function calcTotalXp() {
-    let totalGainedXp = 0;
-    for (let i = 0; i < level; i++) {
-      totalGainedXp += i * 150;
-    }
-    return totalGainedXp;
-  }
 
   return modalResetData ? (
     <ModalContainer>

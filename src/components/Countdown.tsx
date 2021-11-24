@@ -4,10 +4,14 @@ import {
   CancelButton,
   CycleEnded,
   StartButton,
+  IncreaseDurationButton,
+  DecreaseDurationButton,
 } from "../styles/components/TimerStyle";
 import playarrow from "../assets/icons/playarrow.svg";
 import close from "../assets/icons/close.svg";
 import check from "../assets/icons/check.svg";
+import upArrow from "../assets/icons/upArrow.svg";
+import downArrow from "../assets/icons/downArrow.svg";
 
 export function Countdown() {
   const {
@@ -17,6 +21,8 @@ export function Countdown() {
     startCountdown,
     minutes,
     seconds,
+    increaseDuration,
+    decreaseDuration,
   } = useCountdown();
 
   const [minuteLeft, minuteRight] = String(minutes).padStart(2, "0").split("");
@@ -24,16 +30,32 @@ export function Countdown() {
 
   return (
     <>
-      <TimerStyle className={"c-timer-container"}>
-        <div>
-          <p>{minuteLeft}</p>
-          <p>{minuteRight}</p>
+      <TimerStyle>
+        <IncreaseDurationButton
+          disabled={!hasFinished && !isActive ? false : true}
+          onClick={() => {
+            increaseDuration();
+          }}>
+          <img src={upArrow} alt='Up arrow' />
+        </IncreaseDurationButton>
+        <div className={"c-timer-container"}>
+          <div>
+            <p>{minuteLeft}</p>
+            <p>{minuteRight}</p>
+          </div>
+          <span>:</span>
+          <div>
+            <p>{secondLeft}</p>
+            <p>{secondRight}</p>
+          </div>
         </div>
-        <span>:</span>
-        <div>
-          <p>{secondLeft}</p>
-          <p>{secondRight}</p>
-        </div>
+        <DecreaseDurationButton
+          disabled={!hasFinished && !isActive ? false : true}
+          onClick={() => {
+            decreaseDuration();
+          }}>
+          <img src={downArrow} alt='Arrow Down' />
+        </DecreaseDurationButton>
       </TimerStyle>
 
       {!isActive && !hasFinished ? (
@@ -41,7 +63,7 @@ export function Countdown() {
           onClick={() => {
             startCountdown();
           }}>
-          Iniciar um ciclo <img src={playarrow} alt='' />
+          Iniciar um ciclo <img src={playarrow} alt='Start Cycle' />
         </StartButton>
       ) : null}
       {isActive ? (
@@ -50,7 +72,7 @@ export function Countdown() {
             resetCountdown();
           }}>
           Abandonar o ciclo
-          <img src={close} alt='' />
+          <img src={close} alt='Cancel Countdown' />
         </CancelButton>
       ) : null}
       {hasFinished && !isActive ? (

@@ -35,8 +35,10 @@ type AuthContextType = {
     currentExperience: number,
     currentChallengesCompleted: number
   ) => Promise<void>;
-  saveNewData: (newUserState: User) => void;
+  resetStorageDatas: boolean;
+  setResetStorageDatas: Dispatch<SetStateAction<boolean>>;
   loadLocalStorage: () => currentSessionType;
+  saveNewData: (newUserState: User) => void;
 };
 type AuthContextProviderType = {
   children: ReactNode;
@@ -48,6 +50,7 @@ export default function AuthContextProvider({
   children,
 }: AuthContextProviderType) {
   const [user, setUser] = useState<User>();
+  const [resetStorageDatas, setResetStorageDatas] = useState(false);
 
   useEffect(() => {
     // User already logged in
@@ -74,23 +77,28 @@ export default function AuthContextProvider({
     currentExperience: number,
     currentChallengesCompleted: number
   ) {
-    const result = await signInWithPopup(auth, googleAuthProvider);
+    try {
+      const result = await signInWithPopup(auth, googleAuthProvider);
 
-    if (result.user) {
-      const { displayName, photoURL, uid } = result.user;
+      if (result.user) {
+        const { displayName, photoURL, uid } = result.user;
 
-      if (!displayName || !photoURL) {
-        throw new Error("Missing information from Google Account.");
+        if (!displayName || !photoURL) {
+          throw new Error("Missing information from Google Account.");
+        }
+
+        readUserData(
+          uid,
+          displayName,
+          photoURL,
+          actualLevel,
+          currentExperience,
+          currentChallengesCompleted
+        );
+        setResetStorageDatas(true);
       }
-
-      readUserData(
-        uid,
-        displayName,
-        photoURL,
-        actualLevel,
-        currentExperience,
-        currentChallengesCompleted
-      );
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -213,6 +221,8 @@ export default function AuthContextProvider({
         signInWithGoogle,
         saveNewData,
         loadLocalStorage,
+        resetStorageDatas,
+        setResetStorageDatas,
       }}>
       {children}
     </AuthContext.Provider>
