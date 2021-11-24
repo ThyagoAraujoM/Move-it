@@ -22,7 +22,8 @@ function writeUserData(
   name: string,
   imageUrl: string,
   level: number,
-  xp: number
+  xp: number,
+  currentChallengesCompleted: number
 ) {
   const db = getDatabase();
   set(ref(db, "users/" + userId), {
@@ -30,6 +31,7 @@ function writeUserData(
     profile_picture: imageUrl,
     currentLevel: level,
     currentXp: xp,
+    challengesCompleted: currentChallengesCompleted,
   });
 }
 

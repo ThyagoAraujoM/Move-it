@@ -9,6 +9,7 @@ import { Challenges } from "../../components/Challenges";
 import XpBar from "../../components/XpBar";
 import ModalLevelUp from "../../components/ModalLevelUp";
 import flaviconIcon from "../../assets/favicon.png";
+import ModalResetData from "../../components/ModalResetData";
 
 export default function Index() {
   return (
@@ -29,6 +30,7 @@ export default function Index() {
           </div>
         </MainContainer>
         <ModalLevelUp />
+        <ModalResetData />
       </Container>
     </HelmetProvider>
   );

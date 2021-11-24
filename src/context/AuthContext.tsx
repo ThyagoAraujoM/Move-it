@@ -20,19 +20,24 @@ type User = {
   avatar: string;
   level: number;
   xp: number;
+  challengesCompleted: number;
 };
-
+type currentSessionType = {
+  level: number;
+  xp: number;
+  completedChallenges: number;
+};
 type AuthContextType = {
   user: User | undefined;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
   signInWithGoogle: (
     actualLevel: number,
-    currentExperience: number
+    currentExperience: number,
+    currentChallengesCompleted: number
   ) => Promise<void>;
-  saveNewXp: (newUserState: User) => void;
-  saveNewLevel: (newUserState: User) => void;
-  setUser: Dispatch<SetStateAction<User | undefined>>;
+  saveNewData: (newUserState: User) => void;
+  loadLocalStorage: () => currentSessionType;
 };
-
 type AuthContextProviderType = {
   children: ReactNode;
 };
@@ -45,11 +50,11 @@ export default function AuthContextProvider({
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
+    // User already logged in
     if (!user) {
       const unsubscribe = auth.onAuthStateChanged((user: any) => {
         if (user) {
           const { displayName, photoURL, uid } = user;
-
           if (!displayName || !photoURL) {
             throw new Error("Missing information from Google Account.");
           }
@@ -61,11 +66,13 @@ export default function AuthContextProvider({
         unsubscribe();
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function signInWithGoogle(
     actualLevel: number,
-    currentExperience: number
+    currentExperience: number,
+    currentChallengesCompleted: number
   ) {
     const result = await signInWithPopup(auth, googleAuthProvider);
 
@@ -76,8 +83,27 @@ export default function AuthContextProvider({
         throw new Error("Missing information from Google Account.");
       }
 
-      readUserData(uid, displayName, photoURL, actualLevel, currentExperience);
+      readUserData(
+        uid,
+        displayName,
+        photoURL,
+        actualLevel,
+        currentExperience,
+        currentChallengesCompleted
+      );
     }
+  }
+
+  function loadLocalStorage() {
+    let value = localStorage.getItem("currentSession");
+
+    let currentSessionStorage =
+      value === null
+        ? { level: 1, xp: 0, completedChallenges: 0 }
+        : JSON.parse(value);
+
+    console.log(currentSessionStorage);
+    return currentSessionStorage;
   }
 
   function readUserData(
@@ -85,22 +111,31 @@ export default function AuthContextProvider({
     displayName: string,
     photoURL: string,
     actualLevel?: number,
-    currentExperience?: number
+    currentExperience?: number,
+    currentChallengesCompleted?: number
   ) {
     const dbRef = ref(getDatabase());
     get(child(dbRef, `users/${userId}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           let result = snapshot.val();
-          loadUser(userId, result, actualLevel, currentExperience);
+          loadUser(
+            userId,
+            result,
+            actualLevel,
+            currentExperience,
+            currentChallengesCompleted
+          );
         } else {
           createNewUser(
             userId,
             displayName,
             photoURL,
             actualLevel != null ? actualLevel + 1 : 1,
-            currentExperience != null ? currentExperience : 0
+            currentExperience != null ? currentExperience : 0,
+            currentChallengesCompleted != null ? currentChallengesCompleted : 0
           );
+          // salvar novo user no banco de dados
         }
       })
       .catch((error) => {
@@ -115,11 +150,11 @@ export default function AuthContextProvider({
       profile_picture: string;
       currentXp: number;
       currentLevel: number;
-      actualLevel?: number;
-      currentExperience?: number;
+      challengesCompleted: number;
     },
     actualLevel?: number,
-    currentExperience?: number
+    currentExperience?: number,
+    currentChallengesCompleted?: number
   ) {
     setUser({
       id: userId,
@@ -133,6 +168,10 @@ export default function AuthContextProvider({
         actualLevel != null
           ? result.currentLevel + actualLevel
           : result.currentLevel,
+      challengesCompleted:
+        currentChallengesCompleted != null
+          ? result.challengesCompleted + currentChallengesCompleted
+          : result.challengesCompleted,
     });
   }
 
@@ -141,7 +180,8 @@ export default function AuthContextProvider({
     displayName: string,
     photoURL: string,
     level: number,
-    xp: number
+    xp: number,
+    currentChallengesCompleted: number
   ) {
     setUser({
       id: uid,
@@ -149,34 +189,31 @@ export default function AuthContextProvider({
       avatar: photoURL,
       level: level,
       xp: xp,
+      challengesCompleted: currentChallengesCompleted,
     });
   }
 
-  function saveNewXp(newUserState: User) {
+  function saveNewData(newUserState: User) {
     writeUserData(
       newUserState.id,
       newUserState.name,
       newUserState.avatar,
       newUserState.level,
-      newUserState.xp
-    );
-    setUser(newUserState);
-  }
-
-  function saveNewLevel(newUserState: User) {
-    writeUserData(
-      newUserState.id,
-      newUserState.name,
-      newUserState.avatar,
-      newUserState.level,
-      newUserState.xp
+      newUserState.xp,
+      newUserState.challengesCompleted
     );
     setUser(newUserState);
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, signInWithGoogle, saveNewXp, saveNewLevel }}>
+      value={{
+        user,
+        setUser,
+        signInWithGoogle,
+        saveNewData,
+        loadLocalStorage,
+      }}>
       {children}
     </AuthContext.Provider>
   );

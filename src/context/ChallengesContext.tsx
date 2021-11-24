@@ -26,7 +26,9 @@ interface ChallengesContextType {
   resetChallenge: () => void;
   setModalLevelUp: Dispatch<SetStateAction<boolean>>;
   modalLevelUp: boolean;
-  resetCurrentLevelAndXp: () => void;
+  resetCurrentDatas: () => void;
+  modalResetData: boolean;
+  setModalResetData: Dispatch<SetStateAction<boolean>>;
 }
 
 type ChallengesProviderProps = {
@@ -40,35 +42,64 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
   const [challengesCompleted, setChallengesCompleted] = useState(0);
   const [activeChallenge, setActiveChallenge] = useState<Challenge>();
   const [currentExperience, setCurrentExperience] = useState(0);
+  const [modalResetData, setModalResetData] = useState(false);
   const [experienceForNextLevel, setExperienceForNextLevel] = useState(
     level * 150
   );
   const [modalLevelUp, setModalLevelUp] = useState(false);
-  const { user, setUser, saveNewXp, saveNewLevel } = useAuth();
+  const { user, setUser, saveNewData, loadLocalStorage } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      let value = loadLocalStorage();
+
+      setLevel(value.level);
+      setCurrentExperience(value.xp);
+      setExperienceForNextLevel(value.level * 150);
+      setChallengesCompleted(value.completedChallenges);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (user && (user.level !== level || user.xp !== currentExperience)) {
       setLevel(user.level);
       setCurrentExperience(user.xp);
       setExperienceForNextLevel(user.level * 150);
+      setChallengesCompleted(user.challengesCompleted);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, setUser]);
 
   useEffect(() => {
     if (user && user.level !== level) {
       let newUserState = user;
       newUserState.level = level;
-      saveNewLevel(newUserState);
-    }
-  }, [level, setLevel]);
-
-  useEffect(() => {
-    if (user && user.xp !== currentExperience) {
-      let newUserState = user;
       newUserState.xp = currentExperience;
-      saveNewXp(newUserState);
+      newUserState.challengesCompleted = challengesCompleted;
+      saveNewData(newUserState);
+    } else {
+      let currentSessionStorage = {
+        level: level,
+        xp: currentExperience,
+        completedChallenges: challengesCompleted,
+      };
+      localStorage.setItem(
+        "currentSession",
+        JSON.stringify(currentSessionStorage)
+      );
     }
-  }, [currentExperience, setCurrentExperience]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    level,
+    setLevel,
+    challengesCompleted,
+    setChallengesCompleted,
+    currentExperience,
+    setCurrentExperience,
+  ]);
 
   function newChallenge() {
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length);
@@ -114,9 +145,21 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     setActiveChallenge(undefined);
   }
 
-  function resetCurrentLevelAndXp() {
+  function resetCurrentDatas() {
     setLevel(1);
     setCurrentExperience(0);
+    setChallengesCompleted(0);
+
+    let currentSessionStorage = {
+      level: 1,
+      xp: 0,
+      completedChallenges: 0,
+    };
+
+    localStorage.setItem(
+      "currentSession",
+      JSON.stringify(currentSessionStorage)
+    );
   }
 
   return (
@@ -132,7 +175,9 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
         resetChallenge,
         setModalLevelUp,
         modalLevelUp,
-        resetCurrentLevelAndXp,
+        resetCurrentDatas,
+        modalResetData,
+        setModalResetData,
       }}>
       {children}
     </ChallengesContext.Provider>

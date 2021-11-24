@@ -35,6 +35,17 @@ export const UserContainer = styled("div")`
       gap: 5px;
       align-items: center;
       color: #666666;
+      justify-content: space-between;
+      width: 100%;
+      .c-deleteIcon {
+        width: 20px;
+        cursor: pointer;
+        padding: 5px;
+        &:hover {
+          background: #ea433463;
+          border-radius: 5px;
+        }
+      }
     }
   }
 `;
