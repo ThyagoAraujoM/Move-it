@@ -23,11 +23,38 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [TypeScript](https://www.typescriptlang.org/)
 - [Material-UI](https://mui.com/pt/)
 
+<br>
+
+---
+
+<br>
+
 ## 💻 Projeto
 
 O move.it é um app que une a técnica de Pomodoro com a realização de exercícios físicos para quem passa muito tempo na frente do computador. Contando com um sistema de armazenamento local para caso não queria logar com o google, e um armazenamento na nuvem com firebase, utilizando a autenticação com o google.
 
-Clique <a target="_blank" href="https://move-it-three-omega.vercel.app">aqui</a> para acessar a aplicação rodando.
+Acesse a aplicação <a target="_blank" href="https://move-it-three-omega.vercel.app">aqui</a>.
+
+<br>
+
+---
+
+<br>
+
+## 📝 Funcionalidades
+
+- Iniciar, abandonar o ciclo.
+- Novos desafios a cada cilo terminado.
+- Pode resetar progresso atual.
+- Pode salvar progresso atual com login a conta do google.
+- Armazenamento local caso não queria logar com o google.
+- Definir o seu próprio tempo para cada ciclo.
+
+<br/>
+
+---
+
+<br>
 
 ## 🚀 Como executar
 
@@ -35,7 +62,6 @@ Clone o projeto e acesse a pasta do mesmo.
 
 ```bash
 $ git clone https://github.com/ThyagoAraujoM/Move-it.git
-$ cd nlw-06-reactjs
 ```
 
 Para iniciá-lo, siga os passos abaixo:
@@ -54,7 +80,7 @@ Agora você pode acessar [`localhost:3000`](http://localhost:3000) do seu navega
 
 <h2 id="--Contributing"> 🤝 Contribuindo </h2>
 
-Este projeto é para fins de estudo, então me envie um e-mail me contando o que você está fazendo e por que está fazendo, me ensine o que você sabe
+Este projeto é para fins de estudo.
 
 Todos os tipos de contribuições são muito bem-vindos e apreciados!
 
