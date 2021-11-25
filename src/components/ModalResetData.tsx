@@ -23,7 +23,7 @@ export default function ModalResetData() {
       <ModalBox>
         <h2>Apagar dados atuais</h2>
         <h4>
-          Level: {level} | Xp Total: {calcTotalXp} | Desafios Completos:
+          Level: {level} | Xp Total: {calcTotalXp()} | Desafios Completos:
           {challengesCompleted}
         </h4>
         <div>
