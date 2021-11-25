@@ -166,7 +166,7 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     setLevel(1);
     setCurrentExperience(0);
     setChallengesCompleted(0);
-
+    setExperienceForNextLevel(150);
     let currentSessionStorage = {
       level: 1,
       xp: 0,
