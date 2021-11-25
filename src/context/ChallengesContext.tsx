@@ -184,7 +184,7 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     for (let i = 0; i < level; i++) {
       totalGainedXp += i * 150;
     }
-    return totalGainedXp;
+    return totalGainedXp + currentExperience;
   }
 
   return (
